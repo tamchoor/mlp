@@ -5,7 +5,7 @@
 #include <QTimer>
 #include <QResizeEvent>
  
-#include <paintscene.h>
+#include <PaintScene.h>
  
 namespace Ui {
 class Paint;
@@ -31,6 +31,7 @@ private:
      * для пересчёта размеров графической сцены
      * */
     void resizeEvent(QResizeEvent * event);
+    
  
 private slots:
     void slotTimer();

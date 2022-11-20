@@ -28,6 +28,8 @@ void Paint::slotTimer()
     timer->stop();
     scene->setSceneRect(0,0, ui->graphicsView->width() - 20, ui->graphicsView->height() - 20);
 }
+
+
  
 void Paint::resizeEvent(QResizeEvent *event)
 {

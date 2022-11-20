@@ -30,5 +30,7 @@ void paintScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             event->scenePos().y(),
             QPen(Qt::red,10,Qt::SolidLine,Qt::RoundCap));
     // Обновляем данные о предыдущей координате
+
+    
     previousPoint = event->scenePos();
 }

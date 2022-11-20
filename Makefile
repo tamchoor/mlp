@@ -17,7 +17,7 @@ CXX           = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefau
 DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -mmacosx-version-min=13.0 -Wall -Wextra $(DEFINES)
 CXXFLAGS      = -pipe -stdlib=libc++ -O2 -std=gnu++1z $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -mmacosx-version-min=13.0 -Wall -Wextra $(DEFINES)
-INCPATH       = -I. -I. -I/opt/homebrew/lib/QtWidgets.framework/Headers -I/opt/homebrew/lib/QtGui.framework/Headers -I/opt/homebrew/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/AGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/AGL.framework/Headers -I/opt/homebrew/share/qt/mkspecs/macx-clang -F/opt/homebrew/lib
+INCPATH       = -I. -I. -I/opt/homebrew/lib/QtWidgets.framework/Headers -I/opt/homebrew/lib/QtGui.framework/Headers -I/opt/homebrew/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/AGL.framework/Headers -I/opt/homebrew/share/qt/mkspecs/macx-clang -F/opt/homebrew/lib
 QMAKE         = /opt/homebrew/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -52,8 +52,15 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = main.cpp 
-OBJECTS       = main.o
+SOURCES       = main.cpp \
+		Paint.cpp \
+		PaintScene.cpp moc_Paint.cpp \
+		moc_PaintScene.cpp
+OBJECTS       = main.o \
+		Paint.o \
+		PaintScene.o \
+		moc_Paint.o \
+		moc_PaintScene.o
 DIST          = /opt/homebrew/share/qt/mkspecs/features/spec_pre.prf \
 		/opt/homebrew/share/qt/mkspecs/features/device_config.prf \
 		/opt/homebrew/Cellar/qt/6.4.0/share/qt/mkspecs/common/unix.conf \
@@ -308,6 +315,7 @@ DIST          = /opt/homebrew/share/qt/mkspecs/features/spec_pre.prf \
 		/opt/homebrew/share/qt/mkspecs/features/qt_config.prf \
 		/opt/homebrew/share/qt/mkspecs/macx-clang/qmake.conf \
 		/opt/homebrew/share/qt/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/opt/homebrew/share/qt/mkspecs/features/exclusive_builds.prf \
 		/opt/homebrew/share/qt/mkspecs/features/mac/sdk.prf \
 		/opt/homebrew/share/qt/mkspecs/features/toolchain.prf \
@@ -335,7 +343,12 @@ DIST          = /opt/homebrew/share/qt/mkspecs/features/spec_pre.prf \
 		/opt/homebrew/share/qt/mkspecs/features/exceptions.prf \
 		/opt/homebrew/share/qt/mkspecs/features/yacc.prf \
 		/opt/homebrew/share/qt/mkspecs/features/lex.prf \
-		mlp.pro  main.cpp
+		mlp.pro MainWindow.h \
+		Paint.h \
+		PaintScene.h \
+		ui_paint.h main.cpp \
+		Paint.cpp \
+		PaintScene.cpp
 QMAKE_TARGET  = mlp
 DESTDIR       = 
 TARGET        = mlp.app/Contents/MacOS/mlp
@@ -344,7 +357,7 @@ TARGET        = mlp.app/Contents/MacOS/mlp
 EXPORT_QMAKE_MAC_SDK = macosx
 EXPORT_QMAKE_MAC_SDK_VERSION = 12.3
 EXPORT_QMAKE_XCODE_DEVELOPER_PATH = /Applications/Xcode.app/Contents/Developer
-EXPORT__QMAKE_STASH_ = 
+EXPORT__QMAKE_STASH_ = /Users/anastasiadementeva/Desktop/mlp/.qmake.stash
 EXPORT_VALID_ARCHS = arm64
 EXPORT_DEFAULT_ARCHS = arm64
 EXPORT_ARCHS = $(filter $(EXPORT_VALID_ARCHS), $(if $(ARCHS), $(ARCHS), $(if $(EXPORT_DEFAULT_ARCHS), $(EXPORT_DEFAULT_ARCHS), $(EXPORT_VALID_ARCHS))))
@@ -356,7 +369,7 @@ include /opt/homebrew/Cellar/qt/6.4.0/share/qt/mkspecs/features/mac/sdk.mk
 first: all
 ####### Build rules
 
-mlp.app/Contents/MacOS/mlp:  $(OBJECTS)  
+mlp.app/Contents/MacOS/mlp: ui_paint.h $(OBJECTS)  
 	@test -d mlp.app/Contents/MacOS/ || mkdir -p mlp.app/Contents/MacOS/
 	$(LINK) $(LFLAGS) -o $(TARGET)  $(OBJECTS) $(OBJCOMP) $(LIBS)
 
@@ -614,6 +627,7 @@ Makefile: mlp.pro /opt/homebrew/share/qt/mkspecs/macx-clang/qmake.conf /opt/home
 		/opt/homebrew/share/qt/mkspecs/features/qt_config.prf \
 		/opt/homebrew/share/qt/mkspecs/macx-clang/qmake.conf \
 		/opt/homebrew/share/qt/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/opt/homebrew/share/qt/mkspecs/features/exclusive_builds.prf \
 		/opt/homebrew/share/qt/mkspecs/features/mac/sdk.prf \
 		/opt/homebrew/share/qt/mkspecs/features/toolchain.prf \
@@ -900,6 +914,7 @@ Makefile: mlp.pro /opt/homebrew/share/qt/mkspecs/macx-clang/qmake.conf /opt/home
 /opt/homebrew/share/qt/mkspecs/features/qt_config.prf:
 /opt/homebrew/share/qt/mkspecs/macx-clang/qmake.conf:
 /opt/homebrew/share/qt/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /opt/homebrew/share/qt/mkspecs/features/exclusive_builds.prf:
 /opt/homebrew/share/qt/mkspecs/features/mac/sdk.prf:
 /opt/homebrew/share/qt/mkspecs/features/toolchain.prf:
@@ -961,7 +976,9 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/homebrew/share/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents MainWindow.h Paint.h PaintScene.h ui_paint.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp Paint.cpp PaintScene.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents paint.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -971,6 +988,7 @@ clean: compiler_clean
 
 distclean: clean 
 	-$(DEL_FILE) -r mlp.app
+	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
 
@@ -995,14 +1013,51 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /opt/homebrew/share/qt/mkspecs/features/data/dummy.cpp
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -pipe -stdlib=libc++ -O2 -std=gnu++1z $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -mmacosx-version-min=13.0 -Wall -Wextra -dM -E -o moc_predefs.h /opt/homebrew/share/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all:
+compiler_moc_header_make_all: moc_Paint.cpp moc_PaintScene.cpp
 compiler_moc_header_clean:
+	-$(DEL_FILE) moc_Paint.cpp moc_PaintScene.cpp
+moc_Paint.cpp: Paint.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QWidget \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qwidget.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QTimer \
+		/opt/homebrew/lib/QtCore.framework/Headers/qtimer.h \
+		/opt/homebrew/lib/QtGui.framework/Headers/QResizeEvent \
+		/opt/homebrew/lib/QtGui.framework/Headers/qevent.h \
+		PaintScene.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QGraphicsSceneMouseEvent \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qgraphicssceneevent.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
+		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h \
+		moc_predefs.h \
+		/opt/homebrew/share/qt/libexec/moc
+	/opt/homebrew/share/qt/libexec/moc $(DEFINES) --include /Users/anastasiadementeva/Desktop/mlp/moc_predefs.h -I/opt/homebrew/share/qt/mkspecs/macx-clang -I/Users/anastasiadementeva/Desktop/mlp -I/Users/anastasiadementeva/Desktop/mlp -I/opt/homebrew/lib/QtWidgets.framework/Headers -I/opt/homebrew/lib/QtGui.framework/Headers -I/opt/homebrew/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.1.6/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/opt/homebrew/lib Paint.h -o moc_Paint.cpp
+
+moc_PaintScene.cpp: PaintScene.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QGraphicsSceneMouseEvent \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qgraphicssceneevent.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QTimer \
+		/opt/homebrew/lib/QtCore.framework/Headers/qtimer.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
+		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h \
+		moc_predefs.h \
+		/opt/homebrew/share/qt/libexec/moc
+	/opt/homebrew/share/qt/libexec/moc $(DEFINES) --include /Users/anastasiadementeva/Desktop/mlp/moc_predefs.h -I/opt/homebrew/share/qt/mkspecs/macx-clang -I/Users/anastasiadementeva/Desktop/mlp -I/Users/anastasiadementeva/Desktop/mlp -I/opt/homebrew/lib/QtWidgets.framework/Headers -I/opt/homebrew/lib/QtGui.framework/Headers -I/opt/homebrew/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.1.6/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/opt/homebrew/lib PaintScene.h -o moc_PaintScene.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all:
+compiler_uic_make_all: ui_paint.h
 compiler_uic_clean:
+	-$(DEL_FILE) ui_paint.h
+ui_paint.h: paint.ui \
+		/opt/homebrew/share/qt/libexec/uic
+	/opt/homebrew/share/qt/libexec/uic paint.ui -o ui_paint.h
+
 compiler_rez_source_make_all:
 compiler_rez_source_clean:
 compiler_yacc_decl_make_all:
@@ -1011,7 +1066,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean 
+compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
 
@@ -1022,8 +1077,56 @@ main.o: main.cpp /opt/homebrew/lib/QtWidgets.framework/Headers/QHBoxLayout \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QPushButton \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QApplication \
-		/opt/homebrew/lib/QtWidgets.framework/Headers/qapplication.h
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qapplication.h \
+		Paint.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QWidget \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qwidget.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QTimer \
+		/opt/homebrew/lib/QtCore.framework/Headers/qtimer.h \
+		/opt/homebrew/lib/QtGui.framework/Headers/QResizeEvent \
+		/opt/homebrew/lib/QtGui.framework/Headers/qevent.h \
+		PaintScene.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QGraphicsSceneMouseEvent \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qgraphicssceneevent.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
+		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+
+Paint.o: Paint.cpp Paint.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QWidget \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qwidget.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QTimer \
+		/opt/homebrew/lib/QtCore.framework/Headers/qtimer.h \
+		/opt/homebrew/lib/QtGui.framework/Headers/QResizeEvent \
+		/opt/homebrew/lib/QtGui.framework/Headers/qevent.h \
+		PaintScene.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QGraphicsSceneMouseEvent \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qgraphicssceneevent.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
+		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h \
+		ui_paint.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Paint.o Paint.cpp
+
+PaintScene.o: PaintScene.cpp PaintScene.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QGraphicsSceneMouseEvent \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qgraphicssceneevent.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QTimer \
+		/opt/homebrew/lib/QtCore.framework/Headers/qtimer.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
+		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o PaintScene.o PaintScene.cpp
+
+moc_Paint.o: moc_Paint.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Paint.o moc_Paint.cpp
+
+moc_PaintScene.o: moc_PaintScene.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_PaintScene.o moc_PaintScene.cpp
 
 ####### Install
 
