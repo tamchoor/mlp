@@ -6,15 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>359</width>
-    <height>318</height>
+    <width>364</width>
+    <height>448</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Paint</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="1">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Input path to the img in bmp format</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QPushButton" name="reset">
+     <property name="text">
+      <string>reset</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
     <widget class="QPushButton" name="send">
      <property name="mouseTracking">
       <bool>false</bool>
@@ -27,17 +41,40 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QPushButton" name="reset">
-     <property name="text">
-      <string>reset</string>
-     </property>
-    </widget>
+   <item row="1" column="0">
+    <widget class="QLineEdit" name="lineEdit"/>
    </item>
-   <item row="0" column="0">
+   <item row="2" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="0">
     <widget class="QGraphicsView" name="graphicsView">
      <property name="enabled">
       <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Draw new img</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="sendImg">
+     <property name="text">
+      <string>send</string>
      </property>
     </widget>
    </item>

@@ -35,6 +35,9 @@ private:
  
 private slots:
     void slotTimer();
+    void handleButtonSend();
+    void handleButtonSendImg();
+    void handleButtonReset();
 };
  
 #endif // PAINT\_H
