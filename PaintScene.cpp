@@ -8,7 +8,7 @@ void paintScene::printImg()
         x = 0;
         while (x < WIDTH_MTRX)
         {
-            std::cout << img[y][x][0];
+            std::cout << mtrx[y][x][0];
             ++x;
         }
         std::cout << "\n";
@@ -24,7 +24,7 @@ void paintScene::bzeroImg()
         x = 0;
         while (x < WIDTH_MTRX)
         {
-            img[y][x][0] = 0;
+            mtrx[y][x][0] = 0;
             ++x;
         }
         ++y;
@@ -68,10 +68,10 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     previousPoint = event->scenePos();
     // std::cout << "previousPoint.x()  = "<< previousPoint.x() << "\n";
     // std::cout << "previousPoint.y()  = "<< previousPoint.y() << "\n";
-    int newX = round(previousPoint.x()/WIDTH_SIZE_DIFF), newY = round(previousPoint.y()/WIDTH_SIZE_DIFF);
+    int newX = round(previousPoint.x()/10), newY = round(previousPoint.y()/10);
     if (newX >= 0 && newY >= 0 && newX <= WIDTH_MTRX && newY <= HEIGHT_MTRX)
     {
-        img[newY][newX][0] = 1;
+        mtrx[newY][newX][0] = 1;
     }
 }
  
@@ -88,10 +88,10 @@ void paintScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     // std::cout << "previousPoint.y()  = "<< previousPoint.y() << "\n";
     // Обновляем данные о предыдущей координате
 
-    
-    int newX = round(previousPoint.x()/WIDTH_SIZE_DIFF), newY = round(previousPoint.y()/WIDTH_SIZE_DIFF);
+    previousPoint = event->scenePos();
+    int newX = round(previousPoint.x()/10), newY = round(previousPoint.y()/10);
     if (newX >= 0 && newY >= 0 && newX <= WIDTH_MTRX && newY <= HEIGHT_MTRX)
     {
-        img[newY][newX][0] = 1;
+        mtrx[newY][newX][0] = 1;
     }
 }
